@@ -1,9 +1,14 @@
 from datetime import datetime
 from sqlalchemy.orm import backref
-from flaskblog import db
+from flaskblog import db, login_manager
+from flask_login import UserMixin
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
-class User(db.Model): # the table name automatically set to 'user', however this can be chenged
+class User(db.Model, UserMixin): # the table name automatically set to 'user', however this can be chenged
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
